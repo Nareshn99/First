@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const userModel = require("./models/userModel");
+const userModel = require("../models/userModel");
 
 const mw = async function (req, res, next) {
   let token = req.headers["x-auth-token"];
@@ -16,7 +16,9 @@ const mw = async function (req, res, next) {
     return res.send("No such user exists");
 
   let tokenuser = decodedToken.userId
+  console.log(tokenuser,userId)
   if (tokenuser != userId) return res.send({ status: false, msg: "You do not have Authoraisation" })
+
   next()
 }
 

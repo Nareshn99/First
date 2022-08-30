@@ -14,7 +14,7 @@ const loginUser = async function (req, res) {
   let password = req.body.password;
 
   let user = await userModel.findOne({ emailId: userName, password: password });
-  if (!user) return res.send({status: false,msg: "Username or the Password is not corerct"});
+  if (!user) return res.status(404).send({status: false,msg: "Username or the Password is not corerct"});
   let token = jwt.sign(
     {userId: user._id.toString()},"secret-key");
   res.setHeader("x-auth-token", token);
