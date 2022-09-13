@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken')
 const createAuthor = async function (req, res) {
     try {
         let body = req.body
-        let alphabets = /^[A-Z][A-Za-z]{3,20}$/
+        let alphabets = /^[A-Z][A-Za-z]{2,20}$/
         let passValid = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$/
-        let emailValid = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/   
+        let emailValid = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
         if (Object.keys(body).length === 0) {
             return res.status(400).send({ status: false, msg: "You have not provided any data" })
         }
@@ -45,7 +45,7 @@ const createAuthor = async function (req, res) {
             return res.send({ status: false, msg: "Enter valid password" })
         }
         let authorData = await authorModel.create(req.body)
-        res.status(201).send(authorData)
+        res.status(201).send({ status: true, data: authorData })
     }
     catch (err) {
         res.status(500).send(err.message)
@@ -64,15 +64,15 @@ const authorlogin = async function (req, res) {
         }
         let authorDetails = await authorModel.findOne({ email: useraName, password: password })
         if (!authorDetails) {
-            return res.status(401).send({ status: false, error: "Emaild or the password is not correct" })
+            return res.status(400).send({ status: false, error: "Emaild or the password is not correct" })
         }
         let token = jwt.sign(
             {
                 authorId: authorDetails._id.toString(),
                 fristBlog: "the moutain"
-            }, "harikesh-9690-chaudhary-8958-jaat-2606-boy")
+            }, "project-1 secret key is here")
         res.setHeader('x-api-key', token)
-        res.status(200).send({ status: true, token: token });
+        res.status(200).send({ status: true, data: token });
     } catch (err) {
         res.status(500).send(err.message)
     }

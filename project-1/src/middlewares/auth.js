@@ -7,7 +7,7 @@ const auth = function (req, res, next) {
             res.status(400).send({ err: "you are not login" })
         }
         try {
-            let decodedtoken = jwt.verify(token, "harikesh-9690-chaudhary-8958-jaat-2606-boy")
+            let decodedtoken = jwt.verify(token, "project-1 secret key is here")
             req.pass = decodedtoken;
             next()
         } catch (err) {
