@@ -165,9 +165,23 @@ const deleteByQuery = async function (req, res) {
     try {
         let cond = req.query
         //Authorization
-        let blog = await blogModel.findOne({ authorId: req.pass.authorId, isDeleted: false })
-        if (!blog) {
+        let blog = await blogModel.find({ authorId: req.pass.authorId, isDeleted: false })
+        if (blog.length==0) {
             return res.status(404).send({ status: false, msg: "you don't have any Blog" })
+        }
+        if (cond.tags) {
+            let tagsall = cond.tags.trim().split(",").map(tags => tags.trim())
+            cond["tags"] = { $all: tagsall }
+        }
+
+        if (cond.category) {
+            let categorysall = cond.category.trim().split(",").map(category => category.trim())
+            cond["category"] = { $all: categorysall }
+        }
+
+        if (cond.subcategory) {
+            let subcategorysall = cond.subcategory.trim().split(",").map(subcategory => subcategory.trim())
+            cond["subcategory"] = { $all: subcategorysall }
         }
         //Deletetion
         let deleted = await blogModel.updateMany(cond, { $set: { isDeleted: true } })
