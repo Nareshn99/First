@@ -7,52 +7,53 @@ const mongoose = require('mongoose');
 const createBlog = async function (req, res) {
     try {
         let blog = req.body
+        let {title,body,authorId,category,isPublished,isDeleted}=blog
         //validation for title
-        if (!blog.title) {
+        if (!title) {
             return res.status(400).send({ status: false, msg: "provide blog title. it's mandatory" })
         }
-        if (!/^[A-Z][A-Z a-z-]{2,30}$/.test(blog.title)) {
+        if (!/^[A-Z][A-Z a-z-]{2,30}$/.test(title)) {
             return res.status(400).send({ status: false, msg: "blog title contains only string form with first Capital latter" })
         }
-        let checktitle = await blogModel.findOne({ title: blog.title })
+        let checktitle = await blogModel.findOne({ title: title })
         if (checktitle) {
-            return res.status(400).send({ status: false, msg: "this title is already reserved" })
+            return res.status(409).send({ status: false, msg: "this title is already reserved" })
         }
         //validation for body
-        if (!blog.body) {
+        if (!body) {
             return res.status(400).send({ status: false, msg: "provide blog body. it's mandatory" })
         }
-        if (!/^[A-Z][A-Z a-z-]{2,20000}$/.test(blog.body)) {
+        if (!/^[A-Z][A-Z a-z-]{2,20000}$/.test(body)) {
             return res.status(400).send({ status: false, msg: "blog body contains only string form" })
         }
         //validation for authorId
-        if (!blog.authorId) {
+        if (!authorId) {
             return res.status(400).send({ status: false, msg: "Please provide authorId. it's mandatory" })
         }
-        if (!mongoose.Types.ObjectId.isValid(blog.authorId)) {
+        if (!mongoose.Types.ObjectId.isValid(authorId)) {
             return res.status(400).send({ status: false, msg: "AuthorId is not valid,please enter valid ID" })
         }
-        let authorbyid = await authorModel.findById(blog.authorId)
+        let authorbyid = await authorModel.findById(authorId)
         if (!authorbyid) {
-            return res.status(400).send({ status: false, msg: "Author is not exist" })
+            return res.status(404).send({ status: false, msg: "Author is not exist" })
         }
         //validation for category
-        if (!blog.category) {
+        if (!category) {
             return res.status(400).send({ status: false, msg: "please enter your blog category. it's mandatory" })
         }
         //validation for isPublished
-        if (blog.isPublished) {
-            if (typeof (blog.isPublished) !== "boolean") {
+        if (isPublished) {
+            if (typeof (isPublished) !== "boolean") {
                 return res.status(400).send({ status: false, msg: "contains only boolean value in isPablished" })
             }
-            if (blog.isPublished == true) { blog["publishedAt"] = Date.now() }
+            if (isPublished == true) { blog["publishedAt"] = Date.now() }
         }
         //validation for isDeleted
-        if (blog.isDeleted) {
-            if (typeof (blog.isDeleted) !== "boolean") {
+        if (isDeleted) {
+            if (typeof (isDeleted) !== "boolean") {
                 return res.status(400).send({ status: false, msg: "contains only boolean value in isDeleted" })
             }
-            if (blog.isDeleted == true) { blog["deletedAt"] = Date.now() }
+            if (isDeleted == true) { blog["deletedAt"] = Date.now() }
         }
         //blog creation
         let blogCreated = await blogModel.create(blog)
@@ -88,7 +89,7 @@ const getBlogs = async function (req, res) {
 
         let BlogsWithCond = await blogModel.find(temp)
         if (BlogsWithCond.length === 0) {
-            return res.status(400).send({ status: false, msg: `blog not found` })
+            return res.status(404).send({ status: false, msg: `blog not found` })
         }
         res.status(200).send({ status: true, data: BlogsWithCond })
     }
