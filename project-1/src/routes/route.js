@@ -15,4 +15,12 @@ router.put("/blogs/:blogId",middleware.auth, BlogController.updateBlog)
 router.delete("/blogsbyid/:blogId",middleware.auth, BlogController.DeleteBlog)
 router.delete("/blogs",middleware.auth, BlogController.deleteByQuery)
 
+
+//errorHandling for wrong address
+router.all("/**", function (req, res) {         
+    res.status(400).send({
+        status: false,
+        msg: "The api you request is not available"
+    })
+})
 module.exports = router
