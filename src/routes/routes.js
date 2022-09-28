@@ -31,7 +31,7 @@ router.put('/books/:bookId/review/:reviewId',reviewMid.updateReviewMid, reviewco
 router.delete('/books/:bookId/review/:reviewId',reviewcontroller.deleteReview)
 
 //errorHandling for wrong address
-router.all("/**", function (req, res) {
+router.all("/**", function (_, res) {
     res.status(400).send({
         status: false,
         msg: "The api you request is not available"

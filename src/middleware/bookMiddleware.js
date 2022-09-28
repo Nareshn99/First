@@ -1,30 +1,26 @@
-
-const mongoose = require("mongoose")
 const moment = require("moment")
 const validation = require("../validators/validations")
 
 
-
-const createBookMid = async (req, res,next) => {
+const createBookMid = async (req, res, next) => {
 
     try {
         let requestBody = req.body;
         let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody
 
         //check for empty requestBody
-        if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Please provide book details" })
-
+        if (Object.keys(requestBody).length == 0) {
+            return res.status(400).send({ status: false, message: "Please provide book details" })
+        }
 
         //validation for title
         if (!title) {
             return res.status(400).send({ status: false, message: "Title is mandatory" })
         }
-
         if (!validation.isValidName(title)) {
             return res.status(400).send({ status: false, message: "Title should be alphabatical Order And String is valid" })
         }
 
-       
 
         //validation for excerpt
         if (!excerpt) {
@@ -42,7 +38,6 @@ const createBookMid = async (req, res,next) => {
             return res.status(400).send({ status: false, msg: "Invalid userID" })
         }
 
-       
 
         //validation for ISBN
         if (!ISBN) {
@@ -52,7 +47,7 @@ const createBookMid = async (req, res,next) => {
             return res.status(400).send({ status: false, message: "Invalid ISBN" })
         }
 
-       
+
 
         //validation for category
         if (!category) {
@@ -74,7 +69,7 @@ const createBookMid = async (req, res,next) => {
         if (!releasedAt) {
             return res.status(400).send({ status: false, message: "releasedAt is mandatory" })
         }
-        
+
         if (!moment(releasedAt, "YYYY-MM-DD", true).isValid()) {
             return res.status(400).send({ status: false, msg: "releasedAt should be in YYYY-MM-DD format" })
         }
@@ -82,33 +77,33 @@ const createBookMid = async (req, res,next) => {
         if (!moment(releasedAt).isAfter(date)) {
             return res.status(400).send({ status: false, msg: "pls provide an upcoming date" })
         }
-        
 
-        req.requestBody=requestBody
+        req.requestBody = requestBody
         next()
-
     }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
 
+
+
 const getBookByQueryParamMid = async (req, res, next) => {
     try {
         let newData = req.query
         const { userId, category, subcategory } = newData
 
-        let arr=["userId", "category", "subcategory"]
-        for(let key in newData){
-            if(!arr.includes(key)){
-                res.status(400).send({status:false, message:`QueryParams can only be - ${arr.join(",")}`})
+        let arr = ["userId", "category", "subcategory"]
+        for (let key in newData) {
+            if (!arr.includes(key)) {
+                res.status(400).send({ status: false, message: `QueryParams can only be - ${arr.join(",")}` })
                 return
             }
         }
 
-        for(let key in newData){
-            if(newData[key].length==0){
-                res.status(400).send({status:false, message:`${key} can't be empty`})
+        for (let key in newData) {
+            if (newData[key].length == 0) {
+                res.status(400).send({ status: false, message: `${key} can't be empty` })
                 return
             }
         }
@@ -135,7 +130,7 @@ const getBookByQueryParamMid = async (req, res, next) => {
                 return res.status(400).send({ status: false, message: "Invalid subcategory" })
             }
         }
-        req.filterquery=filterquery
+        req.filterquery = filterquery
         next()
 
     } catch (err) {
@@ -146,18 +141,17 @@ const getBookByQueryParamMid = async (req, res, next) => {
 
 
 
-
 const updateBookMid = async (req, res, next) => {
     try {
 
         let bookId = req.params.bookId
 
         //validation for bookId
-        if(!validation.isValidObjectId(bookId)){
-            return res.status(400).send({status:false, message:"Invalid bookId"})
+        if (!validation.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: "Invalid bookId" })
         }
 
-      
+
         let requestbody = req.body
         let { title, excerpt, releasedAt, ISBN } = requestbody
 
@@ -171,7 +165,7 @@ const updateBookMid = async (req, res, next) => {
             if (!validation.isValidName(title)) {
                 return res.status(400).send({ status: false, message: "Title should be alphabatical Order And String is valid" })
             }
-            
+
         }
 
         //validation for excerpt
@@ -197,7 +191,7 @@ const updateBookMid = async (req, res, next) => {
             if (!validation.isValidISBN(ISBN)) {
                 return res.status(400).send({ status: false, message: "Invalid ISBN" })
             }
-            
+
         }
 
         next()
@@ -209,7 +203,7 @@ const updateBookMid = async (req, res, next) => {
 
 
 
-module.exports={
+module.exports = {
     createBookMid,
     getBookByQueryParamMid,
     updateBookMid

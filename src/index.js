@@ -1,6 +1,5 @@
 const express = require('express');
 const route = require('./routes/routes.js');
-
 const mongoose = require('mongoose');
 const app = express();
 
@@ -11,8 +10,8 @@ mongoose.connect("mongodb+srv://priyanka99:EorbzmKpqdV7ml9W@cluster0.puozp1a.mon
     useNewUrlParser: true
 })
 
-    .then(() => console.log("MongoDb is connected......."))
-    .catch(err => console.log(err))
+    .then(() => console.log("MongoDb is connected......"))
+    .catch(err => console.log(err.message))
 
 
 app.use('/', route);

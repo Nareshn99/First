@@ -1,6 +1,4 @@
-
 const validation = require('../validators/validations')
-
 
 
 const createUserMid = async (req, res, next) => {
@@ -10,16 +8,16 @@ const createUserMid = async (req, res, next) => {
         let { title, name, phone, email, password, address } = requestBody
 
         //check for empty requestBody
-        if (Object.keys(requestBody).length === 0) return res.status(400).send({ status: false, message: "Please provide user details" })
-        
-    
+        if (Object.keys(requestBody).length === 0) {
+            return res.status(400).send({ status: false, message: "Please provide user details" })
+        }
+
         //validation for title
         if (!title) {
             return res.status(400).send({ status: false, message: "Title is mandatory" })
         }
-        let arr=["Mr","Mrs","Miss"]
         if (!validation.isValidTitle(title)) {
-            return res.status(400).send({ status: false, message: `Title can only be ${arr.join(",")} / String only`})
+            return res.status(400).send({ status: false, message: `Title can only be Mr,Mrs,Miss / String only` })
         }
 
         //validation for name
@@ -37,7 +35,7 @@ const createUserMid = async (req, res, next) => {
         if (!validation.isValidPhone(phone)) {
             return res.status(400).send({ status: false, message: "Phone Number contain only 10 digits" })
         }
-        
+
 
         //validation for email
         if (!email) {
@@ -46,7 +44,7 @@ const createUserMid = async (req, res, next) => {
         if (!validation.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Email is Invalid" })
         }
-        
+
 
         //validation for password
         if (!password) {
@@ -58,41 +56,41 @@ const createUserMid = async (req, res, next) => {
 
         //validation for address
         if (address) {
-            if ( Object.prototype.toString.call(address)!=="[object Object]" || Object.keys(address).length==0) {
+            if (Object.prototype.toString.call(address) !== "[object Object]" || Object.keys(address).length == 0) {
                 return res.status(400).send({ status: false, message: "Address can't be empty / Object type only " })
             }
-            let {city,pincode,street}= address
+            let { city, pincode, street } = address
 
-            for(let key in address){
-                if(address[key].length==0){
-                    return res.status(400).send({status:false, msg:`pls provide valid data in ${key}`})
+            for (let key in address) {
+                if (address[key].length == 0) {
+                    return res.status(400).send({ status: false, msg: `pls provide valid data in ${key}` })
                 }
             }
-            if(city){
-                if(!validation.isValidName(city)){
-                    return res.status(400).send({status:false,msg:"City must contain letters only / String type"})
+            if (city) {
+                if (!validation.isValidName(city)) {
+                    return res.status(400).send({ status: false, msg: "City must contain letters only / String type" })
                 }
             }
-            if(pincode){
-                if(!validation.isValidPincode(pincode)){
-                    return res.status(400).send({status:false,msg:"pincode must be valid pincode / String type"})
+            if (pincode) {
+                if (!validation.isValidPincode(pincode)) {
+                    return res.status(400).send({ status: false, msg: "pincode must be valid pincode / String type" })
                 }
             }
-            if(street){
-                if(typeof (street) == "string" && street.trim().length==0){
-                    return res.status(400).send({status:false,msg:"street value can't be empty / String type"})
+            if (street) {
+                if (typeof (street) !== "string" && street.trim().length == 0) {
+                    return res.status(400).send({ status: false, msg: "street value can't be empty / String type" })
                 }
-            }                                                                
+            }
         }
 
-       next()
+        next()
     }
     catch (err) {
-        return res.status(500).send({ status:false, message: err.message })
+        return res.status(500).send({ status: false, message: err.message })
     }
 }
 
 
-module.exports={
+module.exports = {
     createUserMid
 }

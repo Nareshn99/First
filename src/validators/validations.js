@@ -45,12 +45,7 @@ const isValid = function (value) {
 const isValidISBN=(data)=>{
     if(typeof data =="string" && data.trim().length !==0 && ISBNregex.test(data.trim())) return true
     return false
-} 
-
-// const isValidreviews=(data)=>{
-//     if(typeof data =="number" && data.trim().length !==0 && /^[0-9]+$/.test(data)) return true
-//     return false
-// }
+}
 
 const isValidObjectId = (data) => {
     if (mongoose.Types.ObjectId.isValid(data))  return true

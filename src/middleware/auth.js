@@ -9,7 +9,7 @@ const authenticationMid = (req,res,next)=> {
             return
         }
 
-        let decode = jwt.verify(
+        jwt.verify(
             token,
             secreteKey,
             (err,result)=>{
